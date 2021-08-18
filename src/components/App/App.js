@@ -17,10 +17,25 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const newContacts = this.state.contacts;
+    const prevContacts = prevState.contacts;
+
+    if (newContacts !== prevContacts) {
+      localStorage.setItem('contacts', JSON.stringify(newContacts));
+    }
+  }
+
   repeatCheck = newName => {
-    return this.state.contacts.find(contact => contact.name === newName)
-      ? false
-      : true;
+    return this.state.contacts.find(({ name }) => name === newName);
   };
 
   showNotification = () => {
@@ -96,13 +111,13 @@ class App extends Component {
         <Section nameForClass={'sectionList'}>
           <h2 className={s.titleContacts}>Contacts</h2>
           <Filter name={filter} onChange={this.setFilterValue} />
-          {this.state.contacts[0] && !this.state.filter ? (
+          {this.state.contacts[0] && ResultSearch[0] ? (
             <ContactList
               contacts={ResultSearch}
               onDeleteContact={this.deleteContact}
             />
           ) : (
-            <p className={s.text}>{'There’s nothing here yet...'}</p>
+            <p className={s.text}>There’s nothing here yet...</p>
           )}
         </Section>
       </>
