@@ -56,7 +56,7 @@ class App extends Component {
   };
 
   addContact = ({ name, number }) => {
-    if (this.repeatCheck(name)) {
+    if (!this.repeatCheck(name)) {
       const contact = {
         id: uuidv4(),
         name,
